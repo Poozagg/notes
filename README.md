@@ -1,3 +1,8 @@
+This app is part of the Scrimba React basic course. I am carrying out the challenge locally and saving in my repository. 
+
+Link to the course: [ba.com/learn/learnreact/notes-app-sync-notes-with-localstorage-co3c5495b8d7949e81b79988a](https://scrimba.com/learn/learnreact)
+
+--------------------------------------------------------------------------------
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
