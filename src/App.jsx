@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import Editor from '../components/Editor'
 import Split from "react-split"
@@ -6,33 +6,44 @@ import {nanoid} from "nanoid"
 import './App.css'
 
 function App() {
-  const [notes, setNotes] = useState([])
-    const [currentNoteId, setCurrentNoteId] = useState(
-        (notes[0] && notes[0].id) || ""
+  // notes as state is  localStorage or an empty array in order to avoid getting null when the app first loads)
+  const [notes, setNotes] = useState(
+    JSON.parse(localStorage.getItem("notes")) || []
     )
+  const [currentNoteId, setCurrentNoteId] = useState(
+      (notes[0] && notes[0].id) || ""
+  )
 
-    function createNewNote() {
-        const newNote = {
-            id: nanoid(),
-            body: "# Type your markdown note's title here"
-        }
-        setNotes(prevNotes => [newNote, ...prevNotes])
-        setCurrentNoteId(newNote.id)
-    }
+  // console.log(notes)
 
-    function updateNote(text) {
-        setNotes(oldNotes => oldNotes.map(oldNote => {
-            return oldNote.id === currentNoteId
-                ? { ...oldNote, body: text }
-                : oldNote
-        }))
-    }
+  // we want this useEffect to run every time the notes array changes
+  useEffect(() => {
+    // notes is the key & JSON is the value of the key
+    localStorage.setItem("notes", JSON.stringify(notes))
+  }, [notes])
 
-    function findCurrentNote() {
-        return notes.find(note => {
-            return note.id === currentNoteId
-        }) || notes[0]
-    }
+  function createNewNote() {
+      const newNote = {
+          id: nanoid(),
+          body: "# Type your markdown note's title here"
+      }
+      setNotes(prevNotes => [newNote, ...prevNotes])
+      setCurrentNoteId(newNote.id)
+  }
+
+  function updateNote(text) {
+      setNotes(oldNotes => oldNotes.map(oldNote => {
+          return oldNote.id === currentNoteId
+              ? { ...oldNote, body: text }
+              : oldNote
+      }))
+  }
+
+  function findCurrentNote() {
+      return notes.find(note => {
+          return note.id === currentNoteId
+      }) || notes[0]
+  }
 
   return (
     <main>
