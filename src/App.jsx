@@ -7,8 +7,9 @@ import './App.css'
 
 function App() {
   // notes as state is  localStorage or an empty array in order to avoid getting null when the app first loads)
+  // lazily initialize 'notes' state as function so it doesnt reach into lacalStorage on every single re-render of the App component.
   const [notes, setNotes] = useState(
-    JSON.parse(localStorage.getItem("notes")) || []
+    () => JSON.parse(localStorage.getItem("notes")) || []
     )
   const [currentNoteId, setCurrentNoteId] = useState(
       (notes[0] && notes[0].id) || ""
