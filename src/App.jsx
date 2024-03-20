@@ -15,8 +15,6 @@ function App() {
       (notes[0] && notes[0].id) || ""
   )
 
-  // console.log(notes)
-
   // we want this useEffect to run every time the notes array changes
   useEffect(() => {
     // notes is the key & JSON is the value of the key
