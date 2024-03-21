@@ -12,7 +12,7 @@ function App() {
     () => JSON.parse(localStorage.getItem("notes")) || []
     )
   const [currentNoteId, setCurrentNoteId] = useState(
-      (notes[0] && notes[0].id) || ""
+      (notes[0]?.id) || ""
   )
 
   // we want this useEffect to run every time the notes array changes
