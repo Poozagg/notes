@@ -13,15 +13,12 @@ import {
 import { notesCollection, db } from "../firebase"
 
 function App() {
-  // notes as state is  localStorage or an empty array in order to avoid getting null when the app first loads)
-  // lazily initialize 'notes' state as function so it doesnt reach into lacalStorage on every single re-render of the App component.
   const [notes, setNotes] = useState([])
   const [currentNoteId, setCurrentNoteId] = useState("")
 
   // we want this useEffect to run every time the notes array changes
   useEffect(() => {
     const unsubscribe = onSnapshot(notesCollection, function(snapshot) {
-      // Sync up our local notes array with the snapshot data
       const notesArr = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
