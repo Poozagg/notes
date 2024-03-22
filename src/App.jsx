@@ -20,6 +20,8 @@ function App() {
   notes.find(note => note.id === currentNoteId)
   || notes[0]
 
+  const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt)
+
   // we want this useEffect to run every time the notes array changes
   useEffect(() => {
     const unsubscribe = onSnapshot(notesCollection, function(snapshot) {
@@ -77,7 +79,7 @@ function App() {
               className="split"
           >
               <Sidebar
-                notes={notes}
+                notes={sortedNotes}
                 currentNote={findCurrentNote()}
                 setCurrentNoteId={setCurrentNoteId}
                 newNote={createNewNote}
