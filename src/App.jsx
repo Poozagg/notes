@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import Editor from '../components/Editor'
 import Split from "react-split"
-import {nanoid} from "nanoid"
 import './App.css'
-import { onSnapshot } from "firebase/firestore"
+import { addDoc, onSnapshot } from "firebase/firestore"
 import { notesCollection } from "../firebase"
 
 function App() {
@@ -28,13 +27,12 @@ function App() {
     return unsubscribe
   }, [notes])
 
-  function createNewNote() {
+  async function createNewNote() {
       const newNote = {
-          id: nanoid(),
           body: "# Type your markdown note's title here"
       }
-      setNotes(prevNotes => [newNote, ...prevNotes])
-      setCurrentNoteId(newNote.id)
+      const newNoteRef = await addDoc(notesCollection, newNote)
+      setCurrentNoteId(newNoteRef.id)
   }
 
 
