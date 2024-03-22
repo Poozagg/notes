@@ -4,21 +4,28 @@ import Editor from '../components/Editor'
 import Split from "react-split"
 import {nanoid} from "nanoid"
 import './App.css'
+import { onSnapshot } from "firebase/firestore"
+import { notesCollection } from "../firebase"
 
 function App() {
   // notes as state is  localStorage or an empty array in order to avoid getting null when the app first loads)
   // lazily initialize 'notes' state as function so it doesnt reach into lacalStorage on every single re-render of the App component.
-  const [notes, setNotes] = useState(
-    () => JSON.parse(localStorage.getItem("notes")) || []
-    )
+  const [notes, setNotes] = useState([])
   const [currentNoteId, setCurrentNoteId] = useState(
       (notes[0]?.id) || ""
   )
 
   // we want this useEffect to run every time the notes array changes
   useEffect(() => {
-    // notes is the key & JSON is the value of the key
-    localStorage.setItem("notes", JSON.stringify(notes))
+    const unsubscribe = onSnapshot(notesCollection, function(snapshot) {
+      // Sync up our local notes array with the snapshot data
+      const notesArr = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+      }))
+      setNotes(notesArr)
+    })
+    return unsubscribe
   }, [notes])
 
   function createNewNote() {
