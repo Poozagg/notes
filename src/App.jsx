@@ -10,9 +10,7 @@ import { notesCollection } from "../firebase"
 function App() {
   // notes as state is  localStorage or an empty array in order to avoid getting null when the app first loads)
   // lazily initialize 'notes' state as function so it doesnt reach into lacalStorage on every single re-render of the App component.
-  const [notes, setNotes] = useState(
-    () => JSON.parse(localStorage.getItem("notes")) || []
-    )
+  const [notes, setNotes] = useState([])
   const [currentNoteId, setCurrentNoteId] = useState(
       (notes[0]?.id) || ""
   )
