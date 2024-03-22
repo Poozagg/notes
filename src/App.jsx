@@ -10,9 +10,7 @@ function App() {
   // notes as state is  localStorage or an empty array in order to avoid getting null when the app first loads)
   // lazily initialize 'notes' state as function so it doesnt reach into lacalStorage on every single re-render of the App component.
   const [notes, setNotes] = useState([])
-  const [currentNoteId, setCurrentNoteId] = useState(
-      (notes[0]?.id) || ""
-  )
+  const [currentNoteId, setCurrentNoteId] = useState("")
 
   // we want this useEffect to run every time the notes array changes
   useEffect(() => {
@@ -25,6 +23,12 @@ function App() {
       setNotes(notesArr)
     })
     return unsubscribe
+  }, [notes])
+
+  useEffect(() => {
+    if (!currentNoteId) {
+      setCurrentNoteId(notes[0]?.id)
+    }
   }, [notes])
 
   async function createNewNote() {
