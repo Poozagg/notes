@@ -15,10 +15,11 @@ import { notesCollection, db } from "../firebase"
 function App() {
   const [notes, setNotes] = useState([])
   const [currentNoteId, setCurrentNoteId] = useState("")
+  const [tempNoteText, setTempNoteText] = useState("")
 
   const currentNote =
-  notes.find(note => note.id === currentNoteId)
-  || notes[0]
+    notes.find(note => note.id === currentNoteId)
+    || notes[0]
 
   const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt)
 
@@ -32,13 +33,28 @@ function App() {
       setNotes(notesArr)
     })
     return unsubscribe
-  }, [notes])
+  }, [])
 
   useEffect(() => {
     if (!currentNoteId) {
       setCurrentNoteId(notes[0]?.id)
     }
   }, [notes])
+
+  useEffect (() => {
+    if (currentNote) {
+      setTempNoteText(currentNote.body)
+    }
+  }, [currentNote])
+
+  // this useEffect will run every time tempNoteText changes
+  // waits 500s before updating the fireStore database/updaeNote function
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      updateNote(tempNoteText)
+    }, 500)
+    return () => clearTimeout(timeoutId)
+  }, [tempNoteText])
 
   async function createNewNote() {
       const newNote = {
@@ -53,19 +69,16 @@ function App() {
 
   async function updateNote(text) {
     const docRef = doc(db, "notes", currentNoteId)
-    await setDoc(docRef, {body: text, updatedAt: Date.now()}, {merge: true})
+    await setDoc(
+      docRef,
+      {body: text, updatedAt: Date.now()},
+      {merge: true}
+    )
   }
 
   async function deleteNote(noteId) {
     const docRef = doc(db, "notes", noteId)
     deleteDoc(docRef)
-  }
-
-
-  function findCurrentNote() {
-      return notes.find(note => {
-          return note.id === currentNoteId
-      }) || notes[0]
   }
 
   return (
@@ -80,15 +93,15 @@ function App() {
           >
               <Sidebar
                 notes={sortedNotes}
-                currentNote={findCurrentNote()}
+                currentNote={currentNote}
                 setCurrentNoteId={setCurrentNoteId}
                 newNote={createNewNote}
                 deleteNote={deleteNote}
               />
               {
                 <Editor
-                  currentNote={findCurrentNote()}
-                  updateNote={updateNote}
+                  tempNoteText={tempNoteText}
+                  setTempNoteText={setTempNoteText}
                 />
               }
           </Split>
