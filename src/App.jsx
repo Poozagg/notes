@@ -3,8 +3,8 @@ import Sidebar from '../components/Sidebar'
 import Editor from '../components/Editor'
 import Split from "react-split"
 import './App.css'
-import { addDoc, onSnapshot } from "firebase/firestore"
-import { notesCollection } from "../firebase"
+import { addDoc, onSnapshot, doc, deleteDoc } from "firebase/firestore"
+import { notesCollection, db } from "../firebase"
 
 function App() {
   // notes as state is  localStorage or an empty array in order to avoid getting null when the app first loads)
@@ -54,9 +54,9 @@ function App() {
       })
   }
 
-  function deleteNote(event, noteId) {
-    event.stopPropagation()
-    setNotes(oldNotes => oldNotes.filter((note) => note.id !== noteId ))
+  async function deleteNote(noteId) {
+    const docRef = doc(db, "notes", noteId)
+    deleteDoc(docRef)
   }
 
 
