@@ -54,8 +54,7 @@ function App() {
       })
   }
 
-  function deleteNote(event, noteId) {
-    event.stopPropagation()
+  function deleteNote(noteId) {
     setNotes(oldNotes => oldNotes.filter((note) => note.id !== noteId ))
   }
 
