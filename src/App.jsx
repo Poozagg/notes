@@ -77,19 +77,17 @@ function App() {
               className="split"
           >
               <Sidebar
-                  notes={notes}
-                  currentNote={findCurrentNote()}
-                  setCurrentNoteId={setCurrentNoteId}
-                  newNote={createNewNote}
-                  deleteNote={deleteNote}
+                notes={notes}
+                currentNote={findCurrentNote()}
+                setCurrentNoteId={setCurrentNoteId}
+                newNote={createNewNote}
+                deleteNote={deleteNote}
               />
               {
-                  currentNoteId &&
-                  notes.length > 0 &&
-                  <Editor
-                      currentNote={findCurrentNote()}
-                      updateNote={updateNote}
-                  />
+                <Editor
+                  currentNote={findCurrentNote()}
+                  updateNote={updateNote}
+                />
               }
           </Split>
           :
